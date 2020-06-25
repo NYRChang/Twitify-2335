@@ -28,7 +28,7 @@ def init_spotify_client():
         token = util.prompt_for_user_token(SPOTIFY_USERNAME, SCOPE,
                                            client_id=CLIENT_ID,
                                            client_secret=CLIENT_SECRET,
-                                           redirect_uri='http://localhost/')
+                                           redirect_uri='http://localhost:8888/callback/')
         spotify_client = spotipy.Spotify(auth=token)
         print('\nClient initialised!\n')
         return spotify_client
