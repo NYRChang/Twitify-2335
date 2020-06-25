@@ -17,18 +17,54 @@ spotify_client_secret = os.environ.get("client_secret")
 
 #https://spotipy.readthedocs.io/en/2.12.0/
 
-# Returns a spotify client object
-def init_spotify_client():
-    try:
-        print('Initialising Spotify Client....')
-        token = util.prompt_for_user_token(user_id, playlist_scope,
-                                           client_id=spotify_client_id,
-                                           client_secret=spotify_client_secret,
-                                           redirect_uri='http://localhost/')
-        spotify_client = spotipy.Spotify(auth=token)
-        print('\nClient initialised!\n')
-        return spotify_client
-    except:
-        sys('\nError initialising Spotify Client!\n')
+#app/twitify.py
 
-spotify_client = init_spotify_client()
+from dotenv import load_dotenv
+import json
+import requests
+import os
+
+###to do: add token info
+
+#Step 1: Pull data from the twitter account
+
+#Step 2: Search spotify for songs (https://developer.spotify.com/console/get-search-item/)
+
+def get_spotify_uri(song, artist):
+    query = "https://api.spotify.com/v1/search?q={}%20{}&type=track%2Cartist&market=US&limit=10&offset=5".format(song,artist)
+
+    response = requests.get(
+        query,
+        headers={
+            "Content-Type": "application/json",
+            "Authorization: Bearer {}".format(token)
+        }
+    )
+    response_json = response.json()
+    
+    return respons_json["tracks"]["items"][0]["uri"]
+
+#Step 3: Create a new playlist (https://developer.spotify.com/console/post-playlists/)
+
+def create_playlist():
+    request_body - json.dumps({
+        "name": "Twitify Playlist",
+        "description": "New Twitify playlist",
+        "public": True
+    })
+
+    query = "https://api.spotify.com/v1/users/{}/playlists".format(user_id)
+
+    response = requests.post(
+        query,
+        data=request_body,
+        headers={
+            "Content-Type": "application/json",
+            "Authorization: Bearer {}".format(token)
+        }
+    )
+    response_json = response.json()
+
+    return response_json["id"]
+
+#Step 4: Add song to playlist
