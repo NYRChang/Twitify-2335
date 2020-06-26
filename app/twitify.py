@@ -38,9 +38,25 @@ def init_spotify_client():
 
 spotify_client = init_spotify_client()
 
+breakpoint()
+
 #Step 1: Pull data from the twitter account
 
 #Step 2: Search spotify for songs (https://developer.spotify.com/console/get-search-item/)
+
+def get_spotify_uri(song, artist):
+    query = "https://api.spotify.com/v1/search?q={}%20{}&type=track%2Cartist&market=US&limit=10&offset=5".format(song,artist)
+
+    response = requests.get(
+        query,
+        headers={
+            "Content-Type": "application/json",
+            "Authorization: Bearer {}".format(token)
+        }
+    )
+    response_json = response.json()
+
+    return respons_json["tracks"]["items"][0]["uri"]
 
 #Step 3: Create a new playlist (https://developer.spotify.com/console/post-playlists/)
 
