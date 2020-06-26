@@ -56,7 +56,9 @@ def get_spotify_uri(song, artist):
     )
     response_json = response.json()
 
-    return respons_json["tracks"]["items"][0]["uri"]
+    return response_json["tracks"]["items"][0]["uri"]
+
+get_spotify_uri("My Love", "Justin Timberlake")
 
 #Step 3: Create a new playlist (https://developer.spotify.com/console/post-playlists/)
 
