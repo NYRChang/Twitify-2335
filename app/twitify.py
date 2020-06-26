@@ -44,6 +44,8 @@ def init_spotify_client():
 
 spotify_client = init_spotify_client()
 
+#Adding Songs to Playlist
+#https://spotipy.readthedocs.io/en/2.12.0/
 spotify_client.trace = False
 results = spotify_client.user_playlist_add_tracks(SPOTIFY_USERNAME, playlist_id, track_ids)
 print(results)
