@@ -1,6 +1,6 @@
 #app/twitify.py
 
-
+import json
 import os
 from dotenv import load_dotenv
 import requests
@@ -38,7 +38,6 @@ def init_spotify_client():
 
 spotify_client = init_spotify_client()
 
-breakpoint()
 
 #Step 1: Pull data from the twitter account
 
@@ -51,14 +50,18 @@ def get_spotify_uri(song, artist):
         query,
         headers={
             "Content-Type": "application/json",
-            "Authorization: Bearer {}".format(token)
+            "Authorization": "Bearer {}".format(token)
         }
     )
     response_json = response.json()
+    uri = response_json["tracks"]["items"][0]["uri"]
+    return uri
 
-    return response_json["tracks"]["items"][0]["uri"]
+spotify_uri = get_spotify_uri("My Love", "Justin Timberlake")
+track_uri = str(spotify_uri.replace("spotify:track:", ""))
+print(track_uri)
 
-get_spotify_uri("My Love", "Justin Timberlake")
+
 
 #Step 3: Create a new playlist (https://developer.spotify.com/console/post-playlists/)
 
