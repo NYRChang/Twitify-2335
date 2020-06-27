@@ -21,16 +21,10 @@ api = twitter.Api(
     access_token_key=access_token,
     access_token_secret=access_secret)
 
-mentions = api.GetMentions()
-print(mentions)
-breakpoint()
+mentions = api.GetMentions(return_json=True)
 
 tweets = []
+for m in mentions:
+    tweets.append(m["text"])
 
-for each s in mentions
-    tweets.append(s)
-
-print(tweets)    
-
-# tweets = json.dumps(mentions)
-# print(tweets)
+print(tweets)
