@@ -6,6 +6,9 @@ from dotenv import load_dotenv
 import requests
 import spotipy
 import spotipy.util as util
+import twitter
+from itertools import combinations
+import pandas as pd
 
 
 #https://github.com/nikhilgaba001/YoutubeToSpotify/blob/master/YoutubeToSpotify.py
@@ -27,6 +30,46 @@ token = util.prompt_for_user_token(SPOTIFY_USERNAME, SCOPE,
                                            client_secret=CLIENT_SECRET,
                                            redirect_uri='http://localhost:8888/callback/')
 
+#setup instructions from https://www.youtube.com/watch?v=dQG4mkD5Nd4&list=PLFf4kGVxRmKXFQgtSctIE0iYsQE26F1UM&index=4&t=0s
+
+load_dotenv()
+
+consumer_key = os.environ.get("APP_KEY")
+consumer_secret = os.environ.get("APP_SECRET")
+access_token = os.environ.get("ACCESS_TOKEN")
+access_secret = os.environ.get("ACCESS_TOKEN_SECRET")
+
+#Step 1: Pull data from the twitter account
+
+#authenticate user via https://python-twitter.readthedocs.io/en/latest/getting_started.html
+api = twitter.Api(
+    consumer_key=consumer_key,
+    consumer_secret=consumer_secret,
+    access_token_key=access_token,
+    access_token_secret=access_secret)
+
+#method and boolean parameter via https://python-twitter.readthedocs.io/en/latest/twitter.html#module-twitter.models
+mentions = api.GetMentions(return_json=True)
+
+tweets = []
+for m in mentions:
+    filtered_tweet = m["text"].replace("@Twitify2335 ", "") #.replace method via https://stackoverflow.com/questions/3939361/remove-specific-characters-from-a-string-in-python
+    tweets.append(filtered_tweet)
+
+text = []
+for t in tweets:
+    text.append(t.split(" - "))
+
+df = pd.DataFrame(text)
+
+df.columns = ["Artist", "Title"]
+
+tracks_to_search = df.to_dict("records")
+print(tracks_to_search)
+print(type(tracks_to_search))   
+
+#Step 2: Search spotify for songs (https://developer.spotify.com/console/get-search-item/)
+
 def init_spotify_client():
     try:
         print('Initialising Spotify Client....')
@@ -37,11 +80,6 @@ def init_spotify_client():
         sys('Spotify Connection Failed')
 
 spotify_client = init_spotify_client()
-
-
-#Step 1: Pull data from the twitter account
-
-#Step 2: Search spotify for songs (https://developer.spotify.com/console/get-search-item/)
 
 def get_spotify_uri(song, artist):
     query = "https://api.spotify.com/v1/search?q={}%20{}&type=track%2Cartist&market=US&limit=10&offset=5".format(song,artist)
@@ -57,8 +95,9 @@ def get_spotify_uri(song, artist):
     uri = response_json["tracks"]["items"][0]["uri"]
     return uri
 
-spotify_uri = get_spotify_uri("My Love", "Justin Timberlake")
-track_uri = str(spotify_uri.replace("spotify:track:", ""))
+for search in tracks_to_search:
+    spotify_uri = get_spotify_uri(search["Title"], search["Artist"])
+    track_uri = str(spotify_uri.replace("spotify:track:", ""))
 print(track_uri)
 
 
