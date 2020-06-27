@@ -65,8 +65,6 @@ df = pd.DataFrame(text)
 df.columns = ["Artist", "Title"]
 
 tracks_to_search = df.to_dict("records")
-print(tracks_to_search)
-print(type(tracks_to_search))   
 
 #Step 2: Search spotify for songs (https://developer.spotify.com/console/get-search-item/)
 
@@ -95,10 +93,14 @@ def get_spotify_uri(song, artist):
     uri = response_json["tracks"]["items"][0]["uri"]
     return uri
 
+uri_to_search = []
 for search in tracks_to_search:
     spotify_uri = get_spotify_uri(search["Title"], search["Artist"])
     track_uri = str(spotify_uri.replace("spotify:track:", ""))
-print(track_uri)
+    uri_to_search.append(track_uri)
+
+
+print(uri_to_search)
 
 
 
