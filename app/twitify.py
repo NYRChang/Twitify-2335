@@ -71,12 +71,11 @@ tracks_to_search = df.to_dict("records")[0]
 #Step 2: Validate inputs and send DM if the input is incorrect
 
 #Error Types:
-# 0. Duplicate songs (validated above)
-# 1. error in artist name
-# 2. error in song name
-# 3. error in both
-# 4. Slash error
-# 5. Does not exist
+# 1. Duplicate songs (validated above)
+# 2. error in artist name: if "Artist" DNE, then send reply to user
+# 3. error in song name: if "Songname" DNE, then send reply to user
+# 4. error in both: if both "Artist" and "Songname" DNE, then send reply to user
+# 5. Slash error: if tracks_to_search does not contain element with " // ", then send reply to user
 
 #Step 3: Search spotify for songs (https://developer.spotify.com/console/get-search-item/)
 
