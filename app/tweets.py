@@ -5,6 +5,7 @@ import json
 import requests 
 import twitter
 from dotenv import load_dotenv
+from itertools import combinations
 
 load_dotenv()
 
@@ -28,4 +29,8 @@ for m in mentions:
     filtered_tweet = m["text"].replace("@Twitify2335 ", "") #.replace method via https://stackoverflow.com/questions/3939361/remove-specific-characters-from-a-string-in-python
     tweets.append(filtered_tweet)
 
-print(tweets)
+text = []
+for t in tweets:
+    text.append(t.split(" - "))
+
+print(text)
