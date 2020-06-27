@@ -53,19 +53,32 @@ mentions = api.GetMentions(return_json=True)
 tweets = []
 for m in mentions:
     filtered_tweet = m["text"].replace("@Twitify2335 ", "") #.replace method via https://stackoverflow.com/questions/3939361/remove-specific-characters-from-a-string-in-python
-    tweets.append(filtered_tweet)
-
+    if filtered_tweet not in tweets:
+        tweets.append(filtered_tweet)
+    else:
+        api.PostUpdate(status=f"@{mentions[0]['user']['screen_name']} This song was already added to the playlist! Please pick another :)", in_reply_to_status_id=mentions[0]['id'])
+        #found that username must be included in reply tweet from https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/post-statuses-update
 text = []
 for t in tweets:
-    text.append(t.split(" - "))
+    text.append(t.split(" // "))
 
 df = pd.DataFrame(text)
 
 df.columns = ["Artist", "Title"]
 
-tracks_to_search = df.to_dict("records")
+tracks_to_search = df.to_dict("records")[0]
 
-#Step 2: Search spotify for songs (https://developer.spotify.com/console/get-search-item/)
+#Step 2: Validate inputs and send DM if the input is incorrect
+
+#Error Types:
+# 0. Duplicate songs (validated above)
+# 1. error in artist name
+# 2. error in song name
+# 3. error in both
+# 4. Slash error
+# 5. Does not exist
+
+#Step 3: Search spotify for songs (https://developer.spotify.com/console/get-search-item/)
 
 def init_spotify_client():
     try:
