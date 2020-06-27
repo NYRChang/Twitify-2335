@@ -1,21 +1,27 @@
-#app/tweets.py
+#instructions from https://www.youtube.com/watch?v=dQG4mkD5Nd4&list=PLFf4kGVxRmKXFQgtSctIE0iYsQE26F1UM&index=4&t=0s
 
-import csv
 import os
 import json
-
-import requests
+import requests 
+import twitter
 from dotenv import load_dotenv
 
 load_dotenv()
 
-api_key = os.environ.get("SECRET_API_KEY")
+consumer_key = os.environ.get("APP_KEY")
+consumer_secret = os.environ.get("APP_SECRET")
+access_token = os.environ.get("ACCESS_TOKEN")
+access_secret = os.environ.get("ACCESS_TOKEN_SECRET")
 
+#authenticate user via https://python-twitter.readthedocs.io/en/latest/getting_started.html
 
-request_url = f"https://api.twitter.com/1.1/search/tweets.json?q=%40twitterapi"
+api = twitter.Api(
+    consumer_key=consumer_key,
+    consumer_secret=consumer_secret,
+    access_token_key=access_token,
+    access_token_secret=access_secret)
 
-response = requests.get(request_url)
-        
-parsed_response = json.loads(response.text) #>Parse response.text into a dictionary
-        
-print(parsed_response)
+mentions = api.GetMentions()
+# print(type(mentions))
+tweets = json.dumps(mentions)
+print(tweets)
