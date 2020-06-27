@@ -6,6 +6,7 @@ import requests
 import twitter
 from dotenv import load_dotenv
 from itertools import combinations
+import pandas as pd
 
 load_dotenv()
 
@@ -33,4 +34,8 @@ text = []
 for t in tweets:
     text.append(t.split(" - "))
 
-print(text)
+df = pd.DataFrame(text)
+
+df.columns = ["Artist", "Title"]
+
+print(df.to_dict("records"))
