@@ -25,6 +25,4 @@ mentions = api.GetMentions(return_json=True)
 
 tweets = []
 for m in mentions:
-    tweets.append(m["text"])
-
-print(tweets)
+    print(m["text"].replace("@Twitify2335 ", "")) #.replace method via https://stackoverflow.com/questions/3939361/remove-specific-characters-from-a-string-in-python
