@@ -22,7 +22,7 @@ CLIENT_SECRET = os.environ.get('spotify_client_secret')
 playlist_id = os.environ.get('playlist')
 
 
-SCOPE = 'playlist-modify-public playlist-modify-private'
+SCOPE = 'playlist-modify-public playlist-modify-private playlist-read-collaborative'
 
 token = util.prompt_for_user_token(SPOTIFY_USERNAME, SCOPE,
                                            client_id=CLIENT_ID,
@@ -117,6 +117,15 @@ def get_spotify_uri(song, artist):
     return uri
 
 
+# How to read items from a playlist via spotipy
+data = spotify_client.user_playlist(SPOTIFY_USERNAME, playlist_id, fields="tracks")
+tracks = data['tracks']['items']
+
+#list of songs by URI already on playlist
+existing_songs = []
+for t in tracks:
+    existing_songs.append(t["track"]["id"])
+
 #get list of songs on playlist already in URI format
 #spotify:playlist:5yeB2JFf09vQ6Na9003kMo
 
@@ -131,12 +140,13 @@ for search in tracks_to_search:
     try:
         spotify_uri = get_spotify_uri(search["Title"], search["Artist"])
         track_uri = str(spotify_uri.replace("spotify:track:", ""))
-        uri_to_search.append(track_uri)
-        print("Success!" , search["Artist"],"//", search["Title"], "has been added")
+        if track_uri in existing_songs:
+            print("*Skip*" , search["Artist"],"//", search["Title"], "is already on playlist")
+        else:  
+            uri_to_search.append(track_uri)
+            print("Success!" , search["Artist"],"//", search["Title"], "has been added")
     except:
-        print("")
         print("*Error*",search["Artist"],"//", search["Title"], "was not found!")
-        print("")
         pass
 
 
@@ -147,8 +157,11 @@ for search in tracks_to_search:
 #Adding Songs to Playlist
 #https://spotipy.readthedocs.io/en/2.12.0/
 spotify_client.trace = False
-results = spotify_client.user_playlist_add_tracks(SPOTIFY_USERNAME, playlist_id, uri_to_search)
 print("")
 print("-----------------------------------")
-print("Your Twitify2335 Playlist have been updated.  Spotify Snapshot ID is:  ")
-print(results["snapshot_id"])
+if uri_to_search != []:
+    results = spotify_client.user_playlist_add_tracks(SPOTIFY_USERNAME, playlist_id, uri_to_search)
+    print("Your Twitify2335 Playlist have been updated.  Spotify Snapshot ID is:  ")
+    print(results["snapshot_id"])
+else:
+    print("No new songs to add")
