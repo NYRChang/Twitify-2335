@@ -52,11 +52,15 @@ mentions = api.GetMentions(return_json=True)
 
 tweets = []
 for m in mentions:
+    api.PostUpdate(status=f"@{m['user']['screen_name']} Please separate Artist and Title with a '//' :)", in_reply_to_status_id=m['id'])
+        #found that username must be included in reply tweet from https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/post-statuses-update
+    else:
+        pass
     filtered_tweet = m["text"].replace("@Twitify2335 ", "") #.replace method via https://stackoverflow.com/questions/3939361/remove-specific-characters-from-a-string-in-python
     if "//" in filtered_tweet:
         tweets.append(filtered_tweet)
-    else:  
-        api.PostUpdate(status=f"@{mentions['user']['screen_name']} Please separate Artist and Title with a '//' :)", in_reply_to_status_id=mentions['id'])
+#else:  
+#    api.PostUpdate(status=f"@{mentions[0]['user']['screen_name']} Please separate Artist and Title with a '//' :)", in_reply_to_status_id=mentions[0]['id'])
 #       #found that username must be included in reply tweet from https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/post-statuses-update
 
 
@@ -108,6 +112,11 @@ def get_spotify_uri(song, artist):
     uri = response_json["tracks"]["items"][0]["uri"]
     return uri
 
+
+#get list of songs on playlist already in URI format
+#spotify:playlist:5yeB2JFf09vQ6Na9003kMo
+
+#adding songs to playlist
 uri_to_search = []
 for search in tracks_to_search:
     spotify_uri = get_spotify_uri(search["Title"], search["Artist"])
