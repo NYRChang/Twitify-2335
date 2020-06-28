@@ -22,7 +22,7 @@ CLIENT_SECRET = os.environ.get('spotify_client_secret')
 playlist_id = os.environ.get('playlist')
 
 
-SCOPE = 'playlist-modify-public'
+SCOPE = 'playlist-modify-public playlist-modify-private'
 
 token = util.prompt_for_user_token(SPOTIFY_USERNAME, SCOPE,
                                            client_id=CLIENT_ID,
