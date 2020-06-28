@@ -23,6 +23,7 @@ playlist_id = os.environ.get('playlist')
 
 
 SCOPE = 'playlist-modify-private'
+track_ids = ["1lKS7SZQ7r5vOChLwJurmm","13X42np3KJr0o2LkK1MG76"]
 
 token = util.prompt_for_user_token(SPOTIFY_USERNAME, SCOPE,
                                            client_id=CLIENT_ID,
@@ -142,5 +143,5 @@ print(uri_to_search)
 #Adding Songs to Playlist
 #https://spotipy.readthedocs.io/en/2.12.0/
 spotify_client.trace = False
-results = spotify_client.user_playlist_add_tracks(SPOTIFY_USERNAME, playlist_id, uri_to_search)
+results = spotify_client.user_playlist_add_tracks(SPOTIFY_USERNAME, playlist_id, track_ids)
 print(results)
