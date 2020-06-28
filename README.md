@@ -8,9 +8,12 @@ To run Twitify:
 
 3. Get your Twitter and Spotify API keys set equal to the following environment variables in your .env file: 
 
-    Spotify API Keys via https://developer.spotify.com/dashboard/login
+    Spotify username:
 
         user_id
+    
+    Spotify API Keys via https://developer.spotify.com/dashboard/login
+
         spotify_client_id
         spotify_client_secret
         playlist
