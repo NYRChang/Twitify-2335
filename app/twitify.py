@@ -58,6 +58,7 @@ for m in mentions:
     else:
         api.PostUpdate(status=f"@{mentions[0]['user']['screen_name']} This song was already added to the playlist! Please pick another :)", in_reply_to_status_id=mentions[0]['id'])
         #found that username must be included in reply tweet from https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/post-statuses-update
+
 text = []
 for t in tweets:
     text.append(t.split(" // "))
