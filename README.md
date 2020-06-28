@@ -6,7 +6,7 @@ To run Twitify:
 
 2. Set up a .env file in your cloned repo and get your Twitter and Spotify API keys set equal to the following environment variables: 
 
-    Spotify API Keys via /.../
+    Spotify API Keys via https://developer.spotify.com/dashboard/login
 
         user_id
         spotify_client_id
