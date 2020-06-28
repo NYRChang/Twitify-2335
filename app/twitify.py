@@ -103,7 +103,7 @@ def init_spotify_client():
 spotify_client = init_spotify_client()
 
 def get_spotify_uri(song, artist):
-    query = "https://api.spotify.com/v1/search?q={}%20{}&type=track%2Cartist&market=US&limit=10&offset=5".format(song,artist)
+    query = "https://api.spotify.com/v1/search?q={}%20{}&type=track%2Cartist&market=US&limit=10&offset=0".format(song,artist)
 
     response = requests.get(
         query,
@@ -128,7 +128,7 @@ for search in tracks_to_search:
     uri_to_search.append(track_uri)
 
 
-print(search)
+print(uri_to_search)
 
 
 #Adding Songs to Playlist
