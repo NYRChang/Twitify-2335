@@ -27,7 +27,8 @@ To run Twitify:
 
 4. Set up a virtual environment via the following commands:
 
-    conda create -n twitify-env python=3.7 # (first time only)
+    conda create -n twitify-env python=3.7 #(first time only)
+
     conda activate twitify-env
 
 5. Install the package requirements via the requirements.txt file:
