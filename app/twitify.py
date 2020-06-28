@@ -63,34 +63,19 @@ for m in mentions:
     filtered_tweet = m["text"].replace("@Twitify2335 ", "") #.replace method via https://stackoverflow.com/questions/3939361/remove-specific-characters-from-a-string-in-python
     if "//" in filtered_tweet:
         tweets.append(filtered_tweet)
-#else:  
-#    api.PostUpdate(status=f"@{mentions[0]['user']['screen_name']} Please separate Artist and Title with a '//' :)", in_reply_to_status_id=mentions[0]['id'])
-#       #found that username must be included in reply tweet from https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/post-statuses-update
 
 
-#Reply Tweet if song was added to playlist
-#tweets = []
-#for m in mentions:
-#    filtered_tweet = m["text"].replace("@Twitify2335 ", "") #.replace method via https://stackoverflow.com/questions/3939361/remove-specific-characters-from-a-string-in-python
-#    if filtered_tweet not in tweets:
-#        tweets.append(filtered_tweet)
-#    else:
-#        api.PostUpdate(status=f"@{mentions[0]['user']['screen_name']} This song was already added to the playlist! Please pick another :)", in_reply_to_status_id=mentions[0]['id'])
-#        #found that username must be included in reply tweet from https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/post-statuses-update
-
-
+#Assembling Dictionary of Artists/Titles using Pandas
 text = []
 for t in tweets:
     text.append(t.split(" // "))
-
 df = pd.DataFrame(text)
-
 df.columns = ["Artist", "Title"]
-
 tracks_to_search = df.to_dict("records")
 
 #Step 2: Search spotify for songs (https://developer.spotify.com/console/get-search-item/)
 
+#Defining Function to obtain Spotify Web API token
 def init_spotify_client():
     try:
         print('Initialising Spotify Connection....')
@@ -100,8 +85,9 @@ def init_spotify_client():
     except:
         sys('Spotify Connection Failed')
 
-spotify_client = init_spotify_client()
 
+
+#Defining Function to Find Spotify Songs
 def get_spotify_uri(song, artist):
     query = "https://api.spotify.com/v1/search?q={}%20{}&type=track%2Cartist&market=US&limit=10&offset=0".format(song,artist)
 
@@ -116,20 +102,22 @@ def get_spotify_uri(song, artist):
     uri = response_json["tracks"]["items"][0]["uri"]
     return uri
 
+#Obtaining Spotify Token
+spotify_client = init_spotify_client()
 
 # How to read items from a playlist via spotipy
+#https://github.com/XDGFX/spotr/blob/master/spotr.py
+
 data = spotify_client.user_playlist(SPOTIFY_USERNAME, playlist_id, fields="tracks")
 tracks = data['tracks']['items']
 
-#list of songs by URI already on playlist
+#list of songs by Spotify URI already on playlist
 existing_songs = []
 for t in tracks:
     existing_songs.append(t["track"]["id"])
 
-#get list of songs on playlist already in URI format
-#spotify:playlist:5yeB2JFf09vQ6Na9003kMo
 
-#adding songs to playlist
+#adding songs to playlist via Custom Function get_spotify_uri
 print("Pulling Twitter Song Requests via Twittify")
 print("...")
 print("..")
@@ -150,11 +138,7 @@ for search in tracks_to_search:
         pass
 
 
-
-#print(uri_to_search)
-
-
-#Adding Songs to Playlist
+#Pushing Songs to Playlist
 #https://spotipy.readthedocs.io/en/2.12.0/
 spotify_client.trace = False
 print("")
