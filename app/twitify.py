@@ -93,7 +93,7 @@ tracks_to_search = df.to_dict("records")
 
 def init_spotify_client():
     try:
-        print('Initialising Spotify Client....')
+        print('Initialising Spotify Connection....')
         spotify_client = spotipy.Spotify(auth=token)
         print('Spotify Connection Successful!')
         return spotify_client
@@ -121,24 +121,34 @@ def get_spotify_uri(song, artist):
 #spotify:playlist:5yeB2JFf09vQ6Na9003kMo
 
 #adding songs to playlist
+print("Pulling Twitter Song Requests via Twittify")
+print("...")
+print("..")
+print(".")
+print("")
 uri_to_search = []
 for search in tracks_to_search:
     try:
         spotify_uri = get_spotify_uri(search["Title"], search["Artist"])
         track_uri = str(spotify_uri.replace("spotify:track:", ""))
         uri_to_search.append(track_uri)
+        print("Success!" , search["Artist"],"//", search["Title"], "has been added")
     except:
+        print("")
+        print("*Error*",search["Artist"],"//", search["Title"], "was not found!")
+        print("")
         pass
 
 
 
-print(uri_to_search)
+#print(uri_to_search)
 
 
 #Adding Songs to Playlist
 #https://spotipy.readthedocs.io/en/2.12.0/
 spotify_client.trace = False
 results = spotify_client.user_playlist_add_tracks(SPOTIFY_USERNAME, playlist_id, uri_to_search)
+print("")
 print("-----------------------------------")
-print("Songs have been added.  Your Snapshot ID is:  ")
+print("Your Twitify2335 Playlist have been updated.  Spotify Snapshot ID is:  ")
 print(results["snapshot_id"])
