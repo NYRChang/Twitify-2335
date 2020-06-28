@@ -53,7 +53,10 @@ mentions = api.GetMentions(return_json=True)
 tweets = []
 for m in mentions:
     if str(" // ") not in m["text"]:
-        api.PostUpdate(status=f"@{m['user']['screen_name']} Please separate Artist and Title with a '//' :)", in_reply_to_status_id=m['id'])
+        try:
+            api.PostUpdate(status=f"@{m['user']['screen_name']} Please separate Artist and Title with a '//' :)", in_reply_to_status_id=m['id'])
+        except:
+            pass
         #found that username must be included in reply tweet from https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/post-statuses-update
     else:
         pass
