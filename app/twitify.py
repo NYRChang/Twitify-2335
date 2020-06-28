@@ -22,8 +22,7 @@ CLIENT_SECRET = os.environ.get('spotify_client_secret')
 playlist_id = os.environ.get('playlist')
 
 
-SCOPE = 'playlist-modify-private'
-track_ids = ["1lKS7SZQ7r5vOChLwJurmm","13X42np3KJr0o2LkK1MG76"]
+SCOPE = 'playlist-modify-public'
 
 token = util.prompt_for_user_token(SPOTIFY_USERNAME, SCOPE,
                                            client_id=CLIENT_ID,
@@ -54,11 +53,23 @@ mentions = api.GetMentions(return_json=True)
 tweets = []
 for m in mentions:
     filtered_tweet = m["text"].replace("@Twitify2335 ", "") #.replace method via https://stackoverflow.com/questions/3939361/remove-specific-characters-from-a-string-in-python
-    if filtered_tweet not in tweets:
+    if "//" in filtered_tweet:
         tweets.append(filtered_tweet)
-    else:
-        api.PostUpdate(status=f"@{mentions[0]['user']['screen_name']} This song was already added to the playlist! Please pick another :)", in_reply_to_status_id=mentions[0]['id'])
-        #found that username must be included in reply tweet from https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/post-statuses-update
+    else:  
+        api.PostUpdate(status=f"@{mentions['user']['screen_name']} Please separate Artist and Title with a '//' :)", in_reply_to_status_id=mentions['id'])
+#       #found that username must be included in reply tweet from https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/post-statuses-update
+
+
+#Reply Tweet if song was added to playlist
+#tweets = []
+#for m in mentions:
+#    filtered_tweet = m["text"].replace("@Twitify2335 ", "") #.replace method via https://stackoverflow.com/questions/3939361/remove-specific-characters-from-a-string-in-python
+#    if filtered_tweet not in tweets:
+#        tweets.append(filtered_tweet)
+#    else:
+#        api.PostUpdate(status=f"@{mentions[0]['user']['screen_name']} This song was already added to the playlist! Please pick another :)", in_reply_to_status_id=mentions[0]['id'])
+#        #found that username must be included in reply tweet from https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/post-statuses-update
+
 
 text = []
 for t in tweets:
@@ -68,18 +79,9 @@ df = pd.DataFrame(text)
 
 df.columns = ["Artist", "Title"]
 
-tracks_to_search = df.to_dict("records")[0]
+tracks_to_search = df.to_dict("records")
 
-#Step 2: Validate inputs and send DM if the input is incorrect
-
-#Error Types:
-# 1. Duplicate songs (validated above)
-# 2. error in artist name: if "Artist" DNE, then send reply to user
-# 3. error in song name: if "Songname" DNE, then send reply to user
-# 4. error in both: if both "Artist" and "Songname" DNE, then send reply to user
-# 5. Slash error: if tracks_to_search does not contain element with " // ", then send reply to user
-
-#Step 3: Search spotify for songs (https://developer.spotify.com/console/get-search-item/)
+#Step 2: Search spotify for songs (https://developer.spotify.com/console/get-search-item/)
 
 def init_spotify_client():
     try:
@@ -113,35 +115,11 @@ for search in tracks_to_search:
     uri_to_search.append(track_uri)
 
 
-print(uri_to_search)
+print(search)
 
-
-
-#Step 3: Create a new playlist (https://developer.spotify.com/console/post-playlists/)
-
-# def create_playlist():
-#     request_body - json.dumps({
-#         "name": "Twitify Playlist",
-#         "description": "New Twitify playlist",
-#         "public": True
-#     })
-
-#     query = "https://api.spotify.com/v1/users/{}/playlists".format(user_id)
-
-#     response = requests.post(
-#         query,
-#         data=request_body,
-#         headers={
-#             "Content-Type": "application/json",
-#             "Authorization: Bearer {}".format(token)
-#         }
-#     )
-#     response_json = response.json()
-
-#     return response_json["id"]"
 
 #Adding Songs to Playlist
 #https://spotipy.readthedocs.io/en/2.12.0/
 spotify_client.trace = False
-results = spotify_client.user_playlist_add_tracks(SPOTIFY_USERNAME, playlist_id, track_ids)
+results = spotify_client.user_playlist_add_tracks(SPOTIFY_USERNAME, playlist_id, uri_to_search)
 print(results)
