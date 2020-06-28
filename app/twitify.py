@@ -123,9 +123,13 @@ def get_spotify_uri(song, artist):
 #adding songs to playlist
 uri_to_search = []
 for search in tracks_to_search:
-    spotify_uri = get_spotify_uri(search["Title"], search["Artist"])
-    track_uri = str(spotify_uri.replace("spotify:track:", ""))
-    uri_to_search.append(track_uri)
+    try:
+        spotify_uri = get_spotify_uri(search["Title"], search["Artist"])
+        track_uri = str(spotify_uri.replace("spotify:track:", ""))
+        uri_to_search.append(track_uri)
+    except:
+        pass
+
 
 
 print(uri_to_search)
@@ -135,4 +139,6 @@ print(uri_to_search)
 #https://spotipy.readthedocs.io/en/2.12.0/
 spotify_client.trace = False
 results = spotify_client.user_playlist_add_tracks(SPOTIFY_USERNAME, playlist_id, uri_to_search)
-print(results)
+print("-----------------------------------")
+print("Songs have been added.  Your Snapshot ID is:  ")
+print(results["snapshot_id"])
