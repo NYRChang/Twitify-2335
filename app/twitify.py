@@ -150,6 +150,7 @@ print("-----------------------------------")
 if uri_to_search != []:
     results = spotify_client.user_playlist_add_tracks(SPOTIFY_USERNAME, playlist_id, uri_to_search)
     print("Your Twitify2335 Playlist have been successfully updated.")
+    print("Your Snapshot ID: ", results["snapshot_id"])
     print("Your Summary below:  ")
     print("-----------------------------------")
     print("The following new songs from your feed were successfully added:  ")
