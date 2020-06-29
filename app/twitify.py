@@ -78,12 +78,11 @@ tracks_to_search = df.to_dict("records")
 #Defining Function to obtain Spotify Web API token
 def init_spotify_client():
     try:
-        print('Initialising Spotify Connection....')
         spotify_client = spotipy.Spotify(auth=token)
         print('Spotify Connection Successful!')
         return spotify_client
     except:
-        sys('Spotify Connection Failed')
+        print('Spotify Connection Failed')
 
 
 
@@ -103,6 +102,8 @@ def get_spotify_uri(song, artist):
     return uri
 
 #Obtaining Spotify Token
+print("")
+print('Initialising Spotify Connection...')
 spotify_client = init_spotify_client()
 
 # How to read items from a playlist via spotipy
@@ -124,17 +125,20 @@ print("..")
 print(".")
 print("")
 uri_to_search = []
+success_songs = []
+skipped_songs = []
+error_songs = []
 for search in tracks_to_search:
     try:
         spotify_uri = get_spotify_uri(search["Title"], search["Artist"])
         track_uri = str(spotify_uri.replace("spotify:track:", ""))
         if track_uri in existing_songs:
-            print("*Skip*" , search["Artist"],"//", search["Title"], "is already on playlist")
+            skipped_songs.append(search)
         else:  
+            success_songs.append(search)
             uri_to_search.append(track_uri)
-            print("Success!" , search["Artist"],"//", search["Title"], "has been added")
     except:
-        print("*Error*",search["Artist"],"//", search["Title"], "was not found!")
+        error_songs.append(search)
         pass
 
 
@@ -145,7 +149,24 @@ print("")
 print("-----------------------------------")
 if uri_to_search != []:
     results = spotify_client.user_playlist_add_tracks(SPOTIFY_USERNAME, playlist_id, uri_to_search)
-    print("Your Twitify2335 Playlist have been updated.  Spotify Snapshot ID is:  ")
-    print(results["snapshot_id"])
+    print("Your Twitify2335 Playlist have been successfully updated.")
+    print("Your Summary below:  ")
+    print("-----------------------------------")
+    print("The following new songs from your feed were successfully added:  ")
+    for success in success_songs:
+        print("Success!" , success["Artist"],"//", success["Title"])
+    print("-----------------------------------")
+    print("The following songs from your feed were already on your playlist:  ")
+    for skip in skipped_songs:
+        print("*Skip*" , skip["Artist"],"//", skip["Title"])
+    print("-----------------------------------")
+    print("The following songs requests from your feed were not found on Spotify:  ")
+    for error in error_songs:
+        print("*Error*", error["Artist"],"//", error["Title"])   
 else:
-    print("No new songs to add")
+    print("No new songs to add from your feed at this time!")
+    print("Tweet some more song requests @ your Twitify Account")
+print("-----------------------------------")
+print("THANK YOU FOR TRYING TWITIFY!")
+print("")
+
