@@ -1,0 +1,9 @@
+user_id = 
+spotify_client_id = 
+spotify_client_secret = 
+playlist = 
+
+APP_KEY =
+APP_SECRET =
+ACCESS_TOKEN =
+ACCESS_TOKEN_SECRET = 
