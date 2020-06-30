@@ -2,6 +2,7 @@
 
 import json
 import os
+from datetime import datetime, timedelta, time
 from dotenv import load_dotenv
 import requests
 import spotipy
@@ -50,11 +51,32 @@ api = twitter.Api(
 #method and boolean parameter via https://python-twitter.readthedocs.io/en/latest/twitter.html#module-twitter.models
 mentions = api.GetMentions(return_json=True)
 
+#Old Code
+# tweets = []
+# for m in mentions:
+#     if str(" // ") not in m["text"]:
+#         try:
+#             api.PostUpdate(status=f"@{m['user']['screen_name']} Please separate Artist and Title with a '//' :)", in_reply_to_status_id=m['id'])
+#         except:
+#             pass
+#         #found that username must be included in reply tweet from https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/post-statuses-update
+#     else:
+#         pass
+#     filtered_tweet = m["text"].replace("@Twitify2335 ", "") #.replace method via https://stackoverflow.com/questions/3939361/remove-specific-characters-from-a-string-in-python
+#     if "//" in filtered_tweet:
+#         tweets.append(filtered_tweet)
+
+
+#New Code to so that only tweets under 0.5 days are replied if incorrect format.  
 tweets = []
 for m in mentions:
     if str(" // ") not in m["text"]:
         try:
-            api.PostUpdate(status=f"@{m['user']['screen_name']} Please separate Artist and Title with a '//' :)", in_reply_to_status_id=m['id'])
+            if (datetime.datetime.now(datetime.timezone.utc) - (datetime.datetime.strptime(m["created_at"], "%a %b %d %H:%M:%S %z %Y"))) < timedelta(days=0.5):
+                api.PostUpdate(status=f"@{m['user']['screen_name']} Please separate Artist and Title with a '//' :)", in_reply_to_status_id=m['id'])
+            #got datetime.now to be "aware" using the .utc argument from https://stackoverflow.com/questions/4530069/how-do-i-get-a-value-of-datetime-today-in-python-that-is-timezone-aware
+            else:
+                pass
         except:
             pass
         #found that username must be included in reply tweet from https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/post-statuses-update
@@ -63,6 +85,7 @@ for m in mentions:
     filtered_tweet = m["text"].replace("@Twitify2335 ", "") #.replace method via https://stackoverflow.com/questions/3939361/remove-specific-characters-from-a-string-in-python
     if "//" in filtered_tweet:
         tweets.append(filtered_tweet)
+
 
 
 #Assembling Dictionary of Artists/Titles using Pandas
