@@ -4,9 +4,9 @@ To run Twitify:
 
 1. Clone this repo from https://github.com/NYRChang/Twitify-2335 to your Github desktop
 
-2. Open the repo in your text editor and set up a .env file in your cloned repo 
+2. Open the repo in your text editor and set up a .env file in your cloned repo to match the sample .env file provided (env-sample.txt), filling in each environment variable per Step 3.
 
-3. Get your Twitter and Spotify API keys and set them equal to the following environment variables in your .env file: 
+3. Get your Twitter and Spotify API keys and set them equal to the following environment variables in your .env file in the cloned repo's root directory: 
 
     Spotify username (your normal Spotify Username from your Spotify account):
 
