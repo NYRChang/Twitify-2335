@@ -70,7 +70,7 @@ mentions = api.GetMentions(return_json=True)
 #New Code to so that only tweets under 0.5 days are replied if incorrect format.  
 tweets = []
 for m in mentions:
-    if str(" // ") not in m["text"]:
+    if str("//") not in m["text"]:
         try:
             if (datetime.datetime.now(datetime.timezone.utc) - (datetime.datetime.strptime(m["created_at"], "%a %b %d %H:%M:%S %z %Y"))) < timedelta(days=0.5):
                 api.PostUpdate(status=f"@{m['user']['screen_name']} Please separate Artist and Title with a '//' :)", in_reply_to_status_id=m['id'])
