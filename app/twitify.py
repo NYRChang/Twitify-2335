@@ -84,7 +84,8 @@ for m in mentions:
         pass
     filtered_tweet = m["text"].replace("@Twitify2335 ", "") #.replace method via https://stackoverflow.com/questions/3939361/remove-specific-characters-from-a-string-in-python
     if "//" in filtered_tweet:
-        tweets.append(filtered_tweet)
+        if filtered_tweet.count("//") == 1: #inputs must only contain 1 "//".  No Twitter Reply for this format yet.  
+            tweets.append(filtered_tweet)
 
 
 
