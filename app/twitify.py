@@ -70,10 +70,10 @@ mentions = api.GetMentions(return_json=True)
 #New Code to so that only tweets under 0.5 days are replied if incorrect format.  
 tweets = []
 for m in mentions:
-    if str("//") not in m["text"]:
+    if str("//") not in m["text"] or (m["text"].count(str("//")) != 1): #inputs must only contain 1 "//".  
         try:
             if (datetime.now(timezone.utc) - datetime.strptime(m["created_at"], "%a %b %d %H:%M:%S %z %Y")) < timedelta(days=0.5):
-                api.PostUpdate(status=f"@{m['user']['screen_name']} Please separate Artist and Title with a '//' :)", in_reply_to_status_id=m['id'])
+                api.PostUpdate(status=f"@{m['user']['screen_name']} Please separate Artist and Title with a single '//' :)", in_reply_to_status_id=m['id'])
             #got datetime.now to be "aware" using the .utc argument from https://stackoverflow.com/questions/4530069/how-do-i-get-a-value-of-datetime-today-in-python-that-is-timezone-aware
             else:
                 pass
@@ -82,7 +82,7 @@ for m in mentions:
         #found that username must be included in reply tweet from https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/post-statuses-update
     else:
         filtered_tweet = m["text"].replace("@Twitify2335 ", "") #.replace method via https://stackoverflow.com/questions/3939361/remove-specific-characters-from-a-string-in-python
-        if str("//") in filtered_tweet and filtered_tweet.count(str("//")) == 1: #inputs must only contain 1 "//".  No Twitter Reply for this format yet.
+        if str("//") in filtered_tweet and filtered_tweet.count(str("//")) == 1: #inputs must only contain 1 "//"
             tweets.append(filtered_tweet)
 
 #Assembling Dictionary of Artists/Titles using Pandas
