@@ -2,7 +2,7 @@
 
 import json
 import os
-from datetime import datetime, timedelta, time
+from datetime import datetime, timedelta, time, timezone
 from dotenv import load_dotenv
 import requests
 import spotipy
@@ -72,7 +72,7 @@ tweets = []
 for m in mentions:
     if str("//") not in m["text"]:
         try:
-            if (datetime.datetime.now(datetime.timezone.utc) - (datetime.datetime.strptime(m["created_at"], "%a %b %d %H:%M:%S %z %Y"))) < timedelta(days=0.5):
+            if (datetime.now(timezone.utc) - datetime.strptime(m["created_at"], "%a %b %d %H:%M:%S %z %Y")) < timedelta(days=0.5):
                 api.PostUpdate(status=f"@{m['user']['screen_name']} Please separate Artist and Title with a '//' :)", in_reply_to_status_id=m['id'])
             #got datetime.now to be "aware" using the .utc argument from https://stackoverflow.com/questions/4530069/how-do-i-get-a-value-of-datetime-today-in-python-that-is-timezone-aware
             else:
@@ -81,13 +81,9 @@ for m in mentions:
             pass
         #found that username must be included in reply tweet from https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/post-statuses-update
     else:
-        pass
-    filtered_tweet = m["text"].replace("@Twitify2335 ", "") #.replace method via https://stackoverflow.com/questions/3939361/remove-specific-characters-from-a-string-in-python
-    if "//" in filtered_tweet:
-        if filtered_tweet.count("//") == 1: #inputs must only contain 1 "//".  No Twitter Reply for this format yet.  
+        filtered_tweet = m["text"].replace("@Twitify2335 ", "") #.replace method via https://stackoverflow.com/questions/3939361/remove-specific-characters-from-a-string-in-python
+        if str("//") in filtered_tweet and filtered_tweet.count(str("//")) == 1: #inputs must only contain 1 "//".  No Twitter Reply for this format yet.
             tweets.append(filtered_tweet)
-
-
 
 #Assembling Dictionary of Artists/Titles using Pandas
 text = []
