@@ -91,7 +91,7 @@ for m in mentions:
 #Assembling Dictionary of Artists/Titles using Pandas
 text = []
 for t in tweets:
-    text.append(t.split(" // "))
+    text.append(t.split("//"))
 df = pd.DataFrame(text)
 df.columns = ["Artist", "Title"]
 tracks_to_search = df.to_dict("records")
