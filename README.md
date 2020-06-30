@@ -11,14 +11,17 @@ To run Twitify:
     Spotify username:
 
         user_id
+
+    Spotify playlist ID from the Spotify playlist of your choice (instructions to get Spotify URI and ID found at https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids)
+
+        playlist
     
     Spotify API Keys via https://developer.spotify.com/dashboard/login
 
         spotify_client_id
         spotify_client_secret
-        playlist
 
-    Twitter API Keys and Access tokens via https://developer.twitter.com/en/
+    Twitter API Keys and Access tokens via https://developer.twitter.com/en/ for  whatever account you want to pull the list of songs from:
 
         APP_KEY
         APP_SECRET
@@ -35,7 +38,7 @@ To run Twitify:
 
     pip install -r requirements.txt
 
-6. Log into Twitter and Tweet a song @Twitify2335 in the format
+6. Log into Twitter and Tweet a song @Twitify2335 (or account of your choice) in the format
 
     "Artist" // "Songname"
 
