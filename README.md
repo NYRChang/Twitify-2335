@@ -6,7 +6,7 @@ To run Twitify:
 
 2. Open the repo in your text editor and set up a .env file in your cloned repo 
 
-3. Get your Twitter and Spotify API keys set equal to the following environment variables in your .env file: 
+3. Get your Twitter and Spotify API keys and set them equal to the following environment variables in your .env file: 
 
     Spotify username (your normal Spotify Username from your Spotify account):
 
@@ -38,10 +38,10 @@ To run Twitify:
 
     pip install -r requirements.txt
 
-6. Log into Twitter and Tweet a song @Twitify2335 (or account of your choice) in the format
+6. Log into Twitter and Tweet a song @Twitify2335 (or account associated with your Twitter API keys) in the format
 
     "Artist" // "Songname"
 
-    #> If you do not use this fomrat, Twitify will reply to your tweet
+    #> If you do not use this format, Twitify will reply to your tweet.
 
 7. Run the script via apps/twitify.py
